@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:movie_app/model/api_return_value.dart';
 import 'package:http/http.dart' as http;
+import 'package:movie_app/model/now_playing_movie.dart';
 import '../model/popular_movie.dart';
 
 String baseUrl = "https://api.themoviedb.org/3";
@@ -32,6 +33,34 @@ class MovieService {
 
       return ApiReturnValue(
         value: popularMovie,
+      );
+    }
+  }
+
+  static Future<ApiReturnValue<List<NowPlayingMovie>>> getNowPlayingMovie(
+      {int? page, http.Client? client}) async {
+    client ??= http.Client();
+
+    String url = "$baseUrl/movie/now_playing?language=en-US&page=${page ?? 1}";
+
+    var response = await client.get(Uri.parse(url), headers: {
+      "Authorization": "Bearer $token",
+      "Content-Type": "application/json",
+    });
+
+    if (response.statusCode != 200) {
+      return ApiReturnValue(
+        message: "Failed To Fetch The Popular Movie",
+      );
+    } else {
+      var data = jsonDecode(response.body);
+
+      List<NowPlayingMovie> nowPlayingMovie = (data["results"] as Iterable)
+          .map((e) => NowPlayingMovie.fromJson(e))
+          .toList();
+
+      return ApiReturnValue(
+        value: nowPlayingMovie,
       );
     }
   }

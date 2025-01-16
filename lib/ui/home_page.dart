@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/cubit/now_playing_cubit.dart';
 import 'package:movie_app/cubit/popular_cubit.dart';
+import 'package:movie_app/model/now_playing_movie.dart';
 import 'package:movie_app/model/popular_movie.dart';
 import '../widget/card_movie.dart';
 
@@ -131,7 +133,7 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 35),
             const Text(
               'Now Playing',
               style: TextStyle(
@@ -141,6 +143,38 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(height: 16),
+            SizedBox(
+              height: 250,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: BlocBuilder<NowPlayingCubit, NowPlayingState>(builder: (_, state) {
+                      if (state is NowPlayingMovieLoaded) {
+                        List<NowPlayingMovie> movie = state.nowPlayingMovie;
+
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children:
+                            movie
+                                .take(7)
+                                .map((e) => CardMovie(name: e.title!, image: e.image!))
+                                .toList() +
+                                [],
+                          ),
+                        );
+                      } else {
+                        return Container(
+                          child: Text("NTTTT"),
+                        );
+                      }
+                    }),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
