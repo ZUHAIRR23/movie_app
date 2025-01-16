@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/cubit/popular_cubit.dart';
 import 'package:movie_app/ui/home_page.dart';
 
 void main() {
@@ -11,10 +13,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutflix',
-      home: HomePage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => PopularCubit())
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutflix',
+        home: HomePage(),
+      ),
     );
   }
 }

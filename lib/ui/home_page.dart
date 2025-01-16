@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/cubit/popular_cubit.dart';
+import 'package:movie_app/model/popular_movie.dart';
+import '../widget/card_movie.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -8,21 +12,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    context.read<PopularCubit>().getPopularMovie();
+    super.initState();
+  }
+
   int _selectedIndex = 0;
-
-  final List<Map<String, String>> popularItems = [
-    {'title': 'Movie 1', 'image': 'https://picsum.photos/100/150?random=1'},
-    {'title': 'Movie 2', 'image': 'https://picsum.photos/100/150?random=2'},
-    {'title': 'Movie 3', 'image': 'https://picsum.photos/100/150?random=3'},
-    {'title': 'Movie 4', 'image': 'https://picsum.photos/100/150?random=4'},
-  ];
-
-  final List<Map<String, String>> nowPlayingItems = [
-    {'title': 'Now Playing 1', 'image': 'https://picsum.photos/100/150?random=5'},
-    {'title': 'Now Playing 2', 'image': 'https://picsum.photos/100/150?random=6'},
-    {'title': 'Now Playing 3', 'image': 'https://picsum.photos/100/150?random=7'},
-    {'title': 'Now Playing 4', 'image': 'https://picsum.photos/100/150?random=8'},
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -95,7 +91,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Populer',
+              'Popular',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -104,36 +100,33 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 16),
             SizedBox(
-              height: 200,
+              height: 250,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: popularItems.length,
                 itemBuilder: (context, index) {
-                  final item = popularItems[index];
                   return Padding(
                     padding: const EdgeInsets.only(right: 16.0),
-                    child: Column(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            item['image']!,
-                            height: 150,
-                            width: 100,
-                            fit: BoxFit.cover,
+                    child: BlocBuilder<PopularCubit, PopularState>(builder: (_, state) {
+                      if (state is PopularMovieLoaded) {
+                        List<PopularMovie> movie = state.popularMovie;
+
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children:
+                                movie
+                                    .take(7)
+                                    .map((e) => CardMovie(name: e.title!, image: e.image!))
+                                    .toList() +
+                                [],
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          item['title']!,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
+                        );
+                      } else {
+                        return Container(
+                          child: Text("NTTTT"),
+                        );
+                      }
+                    }),
                   );
                 },
               ),
@@ -148,41 +141,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(height: 16),
-            SizedBox(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: nowPlayingItems.length,
-                itemBuilder: (context, index) {
-                  final item = nowPlayingItems[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: Column(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            item['image']!,
-                            height: 150,
-                            width: 100,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          item['title']!,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
           ],
         ),
       ),
