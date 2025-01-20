@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/cubit/now_playing_cubit.dart';
 import 'package:movie_app/cubit/popular_cubit.dart';
 import 'package:movie_app/ui/home_page.dart';
-import 'package:movie_app/widget/card_movie.dart';
 
 void main() {
   runApp(const MyApp());

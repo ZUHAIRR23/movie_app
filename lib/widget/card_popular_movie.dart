@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/shared/themes.dart';
 
-class CardMovie extends StatelessWidget {
-  const CardMovie({
+class CardPopularMovie extends StatelessWidget {
+  const CardPopularMovie({
     super.key,
     required this.name,
     required this.image,

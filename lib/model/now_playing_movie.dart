@@ -5,6 +5,7 @@ class NowPlayingMovie extends Equatable {
   final String? title;
   final String? overview;
   final String? image;
+  final String? poster;
   final String? release;
   final double? rating;
   final List<String>? genre;
@@ -14,6 +15,7 @@ class NowPlayingMovie extends Equatable {
     this.title,
     this.overview,
     this.image,
+    this.poster,
     this.release,
     this.rating,
     this.genre,
@@ -23,7 +25,8 @@ class NowPlayingMovie extends Equatable {
     id: data["id"],
     title: data["title"],
     overview: data["overview"],
-    image: data["poster_path"],
+    image: data["backdrop_path"],
+    poster: data["poster_path"],
     release: data["release_date"],
     rating: data["vote_average"],
     genre: List<String>.from(data["genre_ids"].map((x) => x.toString())),
@@ -35,6 +38,7 @@ class NowPlayingMovie extends Equatable {
     title,
     overview,
     image,
+    poster,
     release,
     rating,
     genre,

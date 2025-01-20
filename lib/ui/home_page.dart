@@ -5,7 +5,7 @@ import 'package:movie_app/cubit/popular_cubit.dart';
 import 'package:movie_app/model/now_playing_movie.dart';
 import 'package:movie_app/model/popular_movie.dart';
 import 'package:movie_app/widget/card_now_playing_movie.dart';
-import '../widget/card_movie.dart';
+import '../widget/card_popular_movie.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
                           child: Row(
                             children: movie
                                     .take(7)
-                                    .map((e) => CardMovie(
+                                    .map((e) => CardPopularMovie(
                                         name: e.title!, image: e.image!))
                                     .toList() +
                                 [],
@@ -163,8 +163,7 @@ class _HomePageState extends State<HomePage> {
                           child: Row(
                             children: movie
                                     .take(7)
-                                    .map((e) => CardNowPlayingMovie(
-                                        name: e.title!, image: e.image!))
+                                    .map((e) => CardNowPlayingMovie(movie: e,),)
                                     .toList() +
                                 [],
                           ),
