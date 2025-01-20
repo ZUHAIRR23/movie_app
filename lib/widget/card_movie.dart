@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:movie_app/shared/themes.dart';
 
 class CardMovie extends StatelessWidget {
@@ -14,32 +15,57 @@ class CardMovie extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 120,
+      width: 355,
       margin: const EdgeInsets.only(right: 10),
-      child: Column(
+      child: Stack(
         children: [
           Container(
-            width: 120,
+            width: 355,
             height: 200,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               image: DecorationImage(
-                image:
-                NetworkImage("https://image.tmdb.org/t/p/original/$image"),
+                image: NetworkImage("https://image.tmdb.org/t/p/original/$image"),
                 fit: BoxFit.cover,
-                alignment: Alignment.center,
               ),
             ),
           ),
-          const SizedBox(
-            height: 12,
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.black.withOpacity(0.4),
+                    Colors.transparent,
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Text(
+                name,
+                style: description.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 8.0,
+                      color: Colors.black.withOpacity(0.3),
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ),
           ),
-          Text(
-            name,
-            style: description.copyWith(fontWeight: FontWeight.w100),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          )
         ],
       ),
     );

@@ -50,7 +50,7 @@ class MovieService {
 
     if (response.statusCode != 200) {
       return ApiReturnValue(
-        message: "Failed To Fetch The Popular Movie",
+        message: "Failed To Fetch The Now Playing Movie",
       );
     } else {
       var data = jsonDecode(response.body);

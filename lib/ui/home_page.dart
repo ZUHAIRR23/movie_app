@@ -4,6 +4,7 @@ import 'package:movie_app/cubit/now_playing_cubit.dart';
 import 'package:movie_app/cubit/popular_cubit.dart';
 import 'package:movie_app/model/now_playing_movie.dart';
 import 'package:movie_app/model/popular_movie.dart';
+import 'package:movie_app/widget/card_now_playing_movie.dart';
 import '../widget/card_movie.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     context.read<PopularCubit>().getPopularMovie();
+    context.read<NowPlayingCubit>().getNowPlayingMovie();
     super.initState();
   }
 
@@ -102,23 +104,24 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 16),
             SizedBox(
-              height: 250,
+              height: 200,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.only(right: 16.0),
-                    child: BlocBuilder<PopularCubit, PopularState>(builder: (_, state) {
+                    child: BlocBuilder<PopularCubit, PopularState>(
+                        builder: (_, state) {
                       if (state is PopularMovieLoaded) {
                         List<PopularMovie> movie = state.popularMovie;
 
                         return SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
-                            children:
-                                movie
+                            children: movie
                                     .take(7)
-                                    .map((e) => CardMovie(name: e.title!, image: e.image!))
+                                    .map((e) => CardMovie(
+                                        name: e.title!, image: e.image!))
                                     .toList() +
                                 [],
                           ),
@@ -133,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            const SizedBox(height: 35),
+            const SizedBox(height: 20),
             const Text(
               'Now Playing',
               style: TextStyle(
@@ -150,18 +153,19 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.only(right: 16.0),
-                    child: BlocBuilder<NowPlayingCubit, NowPlayingState>(builder: (_, state) {
+                    child: BlocBuilder<NowPlayingCubit, NowPlayingState>(
+                        builder: (_, state) {
                       if (state is NowPlayingMovieLoaded) {
                         List<NowPlayingMovie> movie = state.nowPlayingMovie;
 
                         return SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
-                            children:
-                            movie
-                                .take(7)
-                                .map((e) => CardMovie(name: e.title!, image: e.image!))
-                                .toList() +
+                            children: movie
+                                    .take(7)
+                                    .map((e) => CardNowPlayingMovie(
+                                        name: e.title!, image: e.image!))
+                                    .toList() +
                                 [],
                           ),
                         );

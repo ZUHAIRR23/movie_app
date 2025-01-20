@@ -23,7 +23,7 @@ class NowPlayingMovie extends Equatable {
     id: data["id"],
     title: data["title"],
     overview: data["overview"],
-    image: data["backdrop_path"],
+    image: data["poster_path"],
     release: data["release_date"],
     rating: data["vote_average"],
     genre: List<String>.from(data["genre_ids"].map((x) => x.toString())),
