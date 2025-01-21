@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:movie_app/model/api_return_value.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_app/model/now_playing_movie.dart';
+import '../model/gallery.dart';
 import '../model/popular_movie.dart';
 
 String baseUrl = "https://api.themoviedb.org/3";
@@ -61,6 +62,34 @@ class MovieService {
 
       return ApiReturnValue(
         value: nowPlayingMovie,
+      );
+    }
+  }
+
+  static Future<ApiReturnValue<List<Gallery>>> getGallery(
+      {int? id, http.Client? client}) async {
+    client ??= http.Client();
+
+    String url = "$baseUrl/movie/$id/images";
+
+    var response = await client.get(Uri.parse(url), headers: {
+      "Authorization": "Bearer $token",
+      "Content-Type": "application/json",
+    });
+
+    if (response.statusCode != 200) {
+      return ApiReturnValue(
+        message: "Failed To Fetch The Now Gallery",
+      );
+    } else {
+      var data = jsonDecode(response.body);
+
+      List<Gallery> gallery = (data["results"] as Iterable)
+          .map((e) => Gallery.fromJson(e))
+          .toList();
+
+      return ApiReturnValue(
+        value: gallery,
       );
     }
   }
