@@ -66,7 +66,7 @@ class MovieService {
     }
   }
 
-  static Future<ApiReturnValue<List<Gallery>>> getGallery(
+  static Future<ApiReturnValue<Gallery>> getGallery(
       {int? id, http.Client? client}) async {
     client ??= http.Client();
 
@@ -84,9 +84,7 @@ class MovieService {
     } else {
       var data = jsonDecode(response.body);
 
-      List<Gallery> gallery = (data["results"] as Iterable)
-          .map((e) => Gallery.fromJson(e))
-          .toList();
+      Gallery gallery = Gallery.fromJson(data);
 
       return ApiReturnValue(
         value: gallery,

@@ -1,9 +1,13 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/cubit/gallery_cubit.dart';
+import 'package:movie_app/model/gallery.dart';
 import 'package:movie_app/model/now_playing_movie.dart';
+import 'package:readmore/readmore.dart';
 
-class DetailPage extends StatelessWidget {
+class DetailPage extends StatefulWidget {
   const DetailPage({
     super.key,
     required this.movie,
@@ -12,6 +16,16 @@ class DetailPage extends StatelessWidget {
   final NowPlayingMovie movie;
 
   @override
+  State<DetailPage> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  @override
+  void initState() {
+    context.read<GalleryCubit>().getGallery(widget.movie.id!);
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
@@ -32,7 +46,7 @@ class DetailPage extends StatelessWidget {
                         ),
                         image: DecorationImage(
                           image: NetworkImage(
-                            "https://image.tmdb.org/t/p/original/${movie.image}",
+                            "https://image.tmdb.org/t/p/original/${widget.movie.image}",
                           ),
                           fit: BoxFit.cover,
                         ),
@@ -61,7 +75,7 @@ class DetailPage extends StatelessWidget {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: Image.network(
-                            "https://image.tmdb.org/t/p/w500/${movie.poster}",
+                            "https://image.tmdb.org/t/p/w500/${widget.movie.poster}",
                             width: 120,
                             height: 180,
                             fit: BoxFit.cover,
@@ -101,10 +115,11 @@ class DetailPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
-                    movie.title!,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+                    widget.movie.title!,
+                    style: TextStyle(
+                      fontSize: 25,
                       color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -112,12 +127,18 @@ class DetailPage extends StatelessWidget {
                 const SizedBox(height: 8),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    movie.overview!,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white70,
+                  child: ReadMoreText(
+                    widget.movie.overview!,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
                     ),
                     textAlign: TextAlign.justify,
+                    trimMode: TrimMode.Line,
+                    trimLines: 2,
+                    colorClickableText: Colors.red,
+                    trimCollapsedText: 'Show more',
+                    trimExpandedText: 'Show less',
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -134,9 +155,9 @@ class DetailPage extends StatelessWidget {
                           Text(
                             "en",
                             style:
-                            Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.white70,
-                            ),
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Colors.white70,
+                                    ),
                           ),
                         ],
                       ),
@@ -145,11 +166,11 @@ class DetailPage extends StatelessWidget {
                           const Icon(Icons.schedule, color: Colors.white),
                           const SizedBox(height: 4),
                           Text(
-                            "${movie.release}",
+                            "${widget.movie.release}",
                             style:
-                            Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.white70,
-                            ),
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Colors.white70,
+                                    ),
                           ),
                         ],
                       ),
@@ -158,11 +179,11 @@ class DetailPage extends StatelessWidget {
                           const Icon(Icons.star, color: Colors.red),
                           const SizedBox(height: 4),
                           Text(
-                            "${movie.rating}",
+                            "${widget.movie.rating}",
                             style:
-                            Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.white70,
-                            ),
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Colors.white70,
+                                    ),
                           ),
                         ],
                       ),
@@ -170,6 +191,64 @@ class DetailPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Gallery',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                BlocBuilder<GalleryCubit, GalleryState>(builder: (_, state) {
+                  if (state is GalleryLoaded) {
+                    Gallery movie = state.gallery;
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: movie.backdrops
+                                .take(7)
+                                .map(
+                                  (e) => Container(
+                                    height: 185,
+                                    width: 350,
+                                    margin: const EdgeInsets.only(right: 10),
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          width: 350,
+                                          height: 185,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                            image: DecorationImage(
+                                              image: NetworkImage(
+                                                  "https://image.tmdb.org/t/p/w500/${e.filePath}"),
+                                              fit: BoxFit.fitWidth,
+                                              alignment: Alignment.center,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                                .toList() +
+                            [],
+                      ),
+                    );
+                  } else {
+                    return Container(
+                      child: Text("NTTTT"),
+                    );
+                  }
+                }),
               ],
             ),
           ),

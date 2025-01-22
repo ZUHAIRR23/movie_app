@@ -10,9 +10,9 @@ part 'gallery_state.dart';
 class GalleryCubit extends Cubit<GalleryState> {
   GalleryCubit() : super(GalleryInitial());
 
-  Future<void> getGallery() async {
-    ApiReturnValue<List<Gallery>> result =
-    await MovieService.getGallery();
+  Future<void> getGallery(int id) async {
+    ApiReturnValue<Gallery> result =
+    await MovieService.getGallery(id: id);
 
     print(result);
     if (result.value != null) {

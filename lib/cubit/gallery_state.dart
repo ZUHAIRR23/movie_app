@@ -15,16 +15,12 @@ final class GalleryLoading extends GalleryState {
 }
 
 final class GalleryLoaded extends GalleryState {
-  final List<Gallery> gallery;
+  final Gallery gallery;
 
   const GalleryLoaded(this.gallery);
 
   @override
   List<Object> get props => [gallery];
-
-  @override
-  String toString() =>
-      'GalleryLoaded { movies: ${gallery.length} }';
 }
 
 final class GalleryLoadingFailed extends GalleryState {
