@@ -3,8 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/cubit/gallery_cubit.dart';
+import 'package:movie_app/cubit/recommendation_cubit.dart';
 import 'package:movie_app/model/gallery.dart';
-import 'package:movie_app/model/now_playing_movie.dart';
+import 'package:movie_app/model/movie.dart';
+import 'package:movie_app/model/recommendation_movie.dart';
+import 'package:movie_app/widget/card_recommendation_movie.dart';
 import 'package:readmore/readmore.dart';
 
 class DetailPage extends StatefulWidget {
@@ -13,7 +16,7 @@ class DetailPage extends StatefulWidget {
     required this.movie,
   });
 
-  final NowPlayingMovie movie;
+  final Movie movie;
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -23,6 +26,9 @@ class _DetailPageState extends State<DetailPage> {
   @override
   void initState() {
     context.read<GalleryCubit>().getGallery(widget.movie.id!);
+    context
+        .read<RecommendationCubit>()
+        .getRecommendationMovie(widget.movie.id!);
     super.initState();
   }
 
@@ -88,7 +94,6 @@ class _DetailPageState extends State<DetailPage> {
                       right: 25,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          // Aksi tombol Play
                           print('Play button pressed');
                         },
                         icon: const Icon(
@@ -135,7 +140,7 @@ class _DetailPageState extends State<DetailPage> {
                     ),
                     textAlign: TextAlign.justify,
                     trimMode: TrimMode.Line,
-                    trimLines: 2,
+                    trimLines: 3,
                     colorClickableText: Colors.red,
                     trimCollapsedText: 'Show more',
                     trimExpandedText: 'Show less',
@@ -190,7 +195,7 @@ class _DetailPageState extends State<DetailPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 16),
+                SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
                   child: Align(
@@ -249,6 +254,59 @@ class _DetailPageState extends State<DetailPage> {
                     );
                   }
                 }),
+                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Recommendations',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                SizedBox(
+                  height: 250,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: BlocBuilder<RecommendationCubit,
+                            RecommendationState>(builder: (_, state) {
+                          if (state is RecommendationMovieLoaded) {
+                            List<RecommendationMovie> movie =
+                                state.recommendationMovie;
+
+                            return SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: movie
+                                        .take(7)
+                                        .map(
+                                          (e) => CardRecommendationMovie(
+                                            movie: e,
+                                          ),
+                                        )
+                                        .toList() +
+                                    [],
+                              ),
+                            );
+                          } else {
+                            return Container(
+                              child: Text("NTTTT"),
+                            );
+                          }
+                        }),
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/cubit/gallery_cubit.dart';
 import 'package:movie_app/cubit/now_playing_cubit.dart';
 import 'package:movie_app/cubit/popular_cubit.dart';
+import 'package:movie_app/cubit/recommendation_cubit.dart';
 import 'package:movie_app/ui/home_page.dart';
 
 void main() {
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => PopularCubit()),
         BlocProvider(create: (_) => NowPlayingCubit()),
         BlocProvider(create: (_) => GalleryCubit()),
+        BlocProvider(create: (_) => RecommendationCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

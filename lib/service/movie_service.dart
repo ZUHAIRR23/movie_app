@@ -4,12 +4,14 @@ import 'package:http/http.dart' as http;
 import 'package:movie_app/model/now_playing_movie.dart';
 import '../model/gallery.dart';
 import '../model/popular_movie.dart';
+import '../model/recommendation_movie.dart';
 
 String baseUrl = "https://api.themoviedb.org/3";
 String token =
     "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4MjgzYTZmOThkOTM1ZDc4NjU5ZDZlOGI4M2U3ZjJmYiIsIm5iZiI6MTcyNTUyMjQwOS43NTcsInN1YiI6IjY2ZDk2MWU5YmU3YzgyZTNlZWI4Y2ZmMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.0wk-pOh98PGWiLhygSxn56XtLXQQhdoJMTFoW1NYnkQ";
 
 class MovieService {
+  // Popular Movie
   static Future<ApiReturnValue<List<PopularMovie>>> getPopularMovie(
       {int? page, http.Client? client}) async {
     client ??= http.Client();
@@ -38,6 +40,7 @@ class MovieService {
     }
   }
 
+  // Now Playing Movie
   static Future<ApiReturnValue<List<NowPlayingMovie>>> getNowPlayingMovie(
       {int? page, http.Client? client}) async {
     client ??= http.Client();
@@ -66,6 +69,7 @@ class MovieService {
     }
   }
 
+  // Gallery
   static Future<ApiReturnValue<Gallery>> getGallery(
       {int? id, http.Client? client}) async {
     client ??= http.Client();
@@ -88,6 +92,34 @@ class MovieService {
 
       return ApiReturnValue(
         value: gallery,
+      );
+    }
+  }
+
+  // Recommendations
+  static Future<ApiReturnValue<List<RecommendationMovie>>>
+      getRecommendationMovie({int? id, http.Client? client}) async {
+    client ??= http.Client();
+
+    String url = "$baseUrl/movie/$id/recommendations";
+
+    var response = await client.get(Uri.parse(url), headers: {
+      "Authorization": "Bearer $token",
+      "Content-Type": "application/json",
+    });
+
+    if (response.statusCode != 200) {
+      return ApiReturnValue(message: "Failed To Fetch The Recommendations");
+    } else {
+      var data = jsonDecode(response.body);
+
+      List<RecommendationMovie> recommendationMovie =
+          (data["results"] as Iterable)
+              .map((e) => RecommendationMovie.fromJson(e))
+              .toList();
+
+      return ApiReturnValue(
+        value: recommendationMovie,
       );
     }
   }
