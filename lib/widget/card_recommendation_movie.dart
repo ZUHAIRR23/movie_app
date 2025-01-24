@@ -26,7 +26,7 @@ class CardRecommendationMovie extends StatelessWidget {
       child: Container(
         height: 250,
         width: 150,
-        margin: const EdgeInsets.only(right: 10),
+        margin: const EdgeInsets.only(right: 15),
         child: Column(
           children: [
             Container(

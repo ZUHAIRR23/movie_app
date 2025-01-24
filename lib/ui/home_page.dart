@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
           child: Icon(Icons.search, color: Colors.white, size: 30),
         ),
         title: const Text(
-          'Flutflix',
+          'CinePlay',
           style: TextStyle(
             color: Colors.red,
             fontWeight: FontWeight.bold,

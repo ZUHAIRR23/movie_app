@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/cubit/credits_cubit.dart';
 import 'package:movie_app/cubit/details_cubit.dart';
 import 'package:movie_app/cubit/gallery_cubit.dart';
 import 'package:movie_app/cubit/recommendation_cubit.dart';
@@ -28,8 +29,11 @@ class _DetailPageState extends State<DetailPage> {
   @override
   void initState() {
     context.read<GalleryCubit>().getGallery(widget.movie.id!);
-    context.read<RecommendationCubit>().getRecommendationMovie(widget.movie.id!);
+    context
+        .read<RecommendationCubit>()
+        .getRecommendationMovie(widget.movie.id!);
     context.read<DetailsCubit>().getDetailsMovie(widget.movie.id!);
+    // context.read<CreditsCubit>().getCreditsMovie(widget.movie.id!);
     super.initState();
   }
 
@@ -186,7 +190,8 @@ class _DetailPageState extends State<DetailPage> {
                             DetailsMovie movie = state.detailsMovie;
                             return Column(
                               children: [
-                                const Icon(Icons.timelapse, color: Colors.white),
+                                const Icon(Icons.timelapse,
+                                    color: Colors.white),
                                 const SizedBox(height: 4),
                                 Text(
                                   "${movie.status}",
@@ -194,8 +199,8 @@ class _DetailPageState extends State<DetailPage> {
                                       .textTheme
                                       .bodySmall
                                       ?.copyWith(
-                                    color: Colors.white70,
-                                  ),
+                                        color: Colors.white70,
+                                      ),
                                 ),
                               ],
                             );
@@ -294,6 +299,23 @@ class _DetailPageState extends State<DetailPage> {
                     );
                   }
                 }),
+                SizedBox(height: 20),
+                Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Actors',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                // Actors Positions
                 SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
