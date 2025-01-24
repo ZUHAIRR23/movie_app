@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:movie_app/model/credits.dart';
 
 class ActorsWidget extends StatelessWidget {
-  const ActorsWidget({super.key});
+  const ActorsWidget({super.key, required this.movie});
+
+  final CreditsMovie movie;
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +17,12 @@ class ActorsWidget extends StatelessWidget {
           Container(
             width: 150,
             height: 150,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              image: DecorationImage(
+                image: NetworkImage("https://image.tmdb.org/t/p/original/${movie}"),
+              ),
+            ),
           ),
         ],
       ),
