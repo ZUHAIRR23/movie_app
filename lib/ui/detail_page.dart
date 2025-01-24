@@ -2,8 +2,10 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/cubit/details_cubit.dart';
 import 'package:movie_app/cubit/gallery_cubit.dart';
 import 'package:movie_app/cubit/recommendation_cubit.dart';
+import 'package:movie_app/model/details_movie.dart';
 import 'package:movie_app/model/gallery.dart';
 import 'package:movie_app/model/movie.dart';
 import 'package:movie_app/model/recommendation_movie.dart';
@@ -26,9 +28,8 @@ class _DetailPageState extends State<DetailPage> {
   @override
   void initState() {
     context.read<GalleryCubit>().getGallery(widget.movie.id!);
-    context
-        .read<RecommendationCubit>()
-        .getRecommendationMovie(widget.movie.id!);
+    context.read<RecommendationCubit>().getRecommendationMovie(widget.movie.id!);
+    context.read<DetailsCubit>().getDetailsMovie(widget.movie.id!);
     super.initState();
   }
 
@@ -153,18 +154,57 @@ class _DetailPageState extends State<DetailPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Column(
-                        children: [
-                          const Icon(Icons.language, color: Colors.white),
-                          const SizedBox(height: 4),
-                          Text(
-                            "en",
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Colors.white70,
-                                    ),
-                          ),
-                        ],
+                      BlocBuilder<DetailsCubit, DetailsState>(
+                        builder: (_, state) {
+                          if (state is DetailsMovieLoaded) {
+                            DetailsMovie movie = state.detailsMovie;
+                            return Column(
+                              children: [
+                                const Icon(Icons.language, color: Colors.white),
+                                const SizedBox(height: 4),
+                                Text(
+                                  "${movie.originalLanguage}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                        color: Colors.white70,
+                                      ),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return Container(
+                              child: Text("NTTTT"),
+                            );
+                          }
+                        },
+                      ),
+                      BlocBuilder<DetailsCubit, DetailsState>(
+                        builder: (_, state) {
+                          if (state is DetailsMovieLoaded) {
+                            DetailsMovie movie = state.detailsMovie;
+                            return Column(
+                              children: [
+                                const Icon(Icons.timelapse, color: Colors.white),
+                                const SizedBox(height: 4),
+                                Text(
+                                  "${movie.status}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                    color: Colors.white70,
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return Container(
+                              child: Text("NTTTT"),
+                            );
+                          }
+                        },
                       ),
                       Column(
                         children: [

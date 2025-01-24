@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:movie_app/model/api_return_value.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_app/model/now_playing_movie.dart';
+import '../model/details_movie.dart';
 import '../model/gallery.dart';
 import '../model/popular_movie.dart';
 import '../model/recommendation_movie.dart';
@@ -120,6 +121,33 @@ class MovieService {
 
       return ApiReturnValue(
         value: recommendationMovie,
+      );
+    }
+  }
+
+  // Details
+  static Future<ApiReturnValue<DetailsMovie>> getDetailsMovie(
+      {int? id, http.Client? client}) async {
+    client ??= http.Client();
+
+    String url = "$baseUrl/movie/$id?language=en-US";
+
+    var response = await client.get(Uri.parse(url), headers: {
+      "Authorization": "Bearer $token",
+      "Content-Type": "application/json",
+    });
+
+    if (response.statusCode != 200) {
+      return ApiReturnValue(
+        message: "Failed To Fetch The Now Playing Movie",
+      );
+    } else {
+      var data = jsonDecode(response.body);
+
+      DetailsMovie movie = DetailsMovie.fromJson(data);
+
+      return ApiReturnValue(
+        value: movie,
       );
     }
   }
